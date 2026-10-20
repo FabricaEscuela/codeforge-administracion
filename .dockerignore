@@ -1,0 +1,10 @@
+.git
+.github
+.idea
+.vscode
+**/target
+*.bak
+*.http
+.env
+.env.*
+**/application-local.properties
