@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: codefactory
+          POSTGRES_USER: codefactory
+          POSTGRES_PASSWORD: codefactory
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U codefactory"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      APP_JWT_SECRET: ci-solo-pruebas-secreto-jwt-de-48-caracteres-aaaa
+      APP_INTERNAL_TOKEN: ci-solo-pruebas-token-interno
+      AUTENTICACION_URL: http://localhost:8081
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v7
+
+      - name: Preparar Java 21 y cache de Maven
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Dar permiso de ejecucion al wrapper
+        run: chmod +x mvnw
+
+      - name: Compilar y ejecutar pruebas
+        run: ./mvnw -B verify
