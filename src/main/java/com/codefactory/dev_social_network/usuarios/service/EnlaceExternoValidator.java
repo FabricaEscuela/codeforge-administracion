@@ -11,10 +11,10 @@ import com.codefactory.dev_social_network.shared.exception.EnlaceInvalidoExcepti
 public class EnlaceExternoValidator {
 
     private static final Pattern GITHUB_PATTERN =
-            Pattern.compile("^http://github\\.com/[a-zA-Z0-9-]+/?$");
+            Pattern.compile("^https?://(?:www\\.)?github\\.com/[a-zA-Z0-9-]+/?$");
 
     private static final Pattern LINKEDIN_PATTERN =
-            Pattern.compile("^https://www\\.linkedin\\.com/in/[a-zA-Z0-9-]+/$");
+            Pattern.compile("^https://(?:www\\.)?linkedin\\.com/in/[a-zA-Z0-9-]+/?$");
 
     public void validarGithub(String githubLink) {
         if (githubLink == null || githubLink.isBlank()) {
@@ -22,7 +22,7 @@ public class EnlaceExternoValidator {
         }
         if (!GITHUB_PATTERN.matcher(githubLink.trim()).matches()) {
             throw new EnlaceInvalidoException(
-                    "El enlace de GitHub no es válido. Debe cumplir el patrón: http://github.com/[nombre de usuario]");
+                    "El enlace de GitHub no es válido. Usa un formato como https://github.com/usuario");
         }
     }
 
@@ -32,7 +32,7 @@ public class EnlaceExternoValidator {
         }
         if (!LINKEDIN_PATTERN.matcher(linkedinLink.trim()).matches()) {
             throw new EnlaceInvalidoException(
-                    "El enlace de LinkedIn no es válido. Debe cumplir el patrón: https://www.linkedin.com/in/[nombre de usuario]/");
+                    "El enlace de LinkedIn no es válido. Usa un formato como https://linkedin.com/in/usuario");
         }
     }
 

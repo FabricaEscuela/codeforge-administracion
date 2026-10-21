@@ -1,7 +1,9 @@
 package com.codefactory.dev_social_network.discusiones.controller;
 
 import com.codefactory.dev_social_network.discusiones.dto.DiscussionDetailResponse;
+import com.codefactory.dev_social_network.discusiones.dto.DiscussionListItem;
 import com.codefactory.dev_social_network.discusiones.interfaces.GetDiscussionUseCase;
+import com.codefactory.dev_social_network.discusiones.interfaces.ListDiscussionsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/discussions")
 @Tag(
@@ -23,14 +27,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class DiscussionQueryController {
 
     private final GetDiscussionUseCase getDiscussionUseCase;
+    private final ListDiscussionsUseCase listDiscussionsUseCase;
 
-    public DiscussionQueryController(GetDiscussionUseCase getDiscussionUseCase) {
+    public DiscussionQueryController(GetDiscussionUseCase getDiscussionUseCase,
+                                     ListDiscussionsUseCase listDiscussionsUseCase) {
         this.getDiscussionUseCase = getDiscussionUseCase;
+        this.listDiscussionsUseCase = listDiscussionsUseCase;
+    }
+
+    @Operation(summary = "List recent discussions")
+    @GetMapping
+    public ResponseEntity<List<DiscussionListItem>> list() {
+        return ResponseEntity.ok(listDiscussionsUseCase.listRecent());
     }
 
     @Operation(
             summary = "Get a discussion by id",
-            description = "Returns the id, title, status (OPEN or RESOLVED) and author of a discussion. Any authenticated user can query it"
+            description = "Returns discussion content, technology, status, author and creation date. Any authenticated user can query it"
     )
     @ApiResponses({
             @ApiResponse(

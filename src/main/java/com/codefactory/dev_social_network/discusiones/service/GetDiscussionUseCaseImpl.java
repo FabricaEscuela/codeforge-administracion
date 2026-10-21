@@ -28,7 +28,10 @@ public class GetDiscussionUseCaseImpl implements GetDiscussionUseCase {
                 discussion.getId(),
                 discussion.getTitle(),
                 discussion.getStatus(),
-                discussion.getUserId()
+                discussion.getUserId(),
+                discussion.getContent(),
+                discussion.getTechnologyId(),
+                discussion.getCreatedAt()
         );
     }
 }
