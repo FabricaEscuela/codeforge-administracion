@@ -1,6 +1,8 @@
 package com.codefactory.dev_social_network.shared.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationException(
@@ -82,11 +86,14 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
 
+        String traceId = generateTraceId();
+        log.error("Error inesperado traceId={} ruta={}", traceId, request.getRequestURI(), exception);
+
         ApiErrorResponse response = new ApiErrorResponse(
                 "INTERNAL_SERVER_ERROR",
                 "An unexpected error occurred",
                 List.of(),
-                generateTraceId()
+                traceId
         );
 
         return ResponseEntity

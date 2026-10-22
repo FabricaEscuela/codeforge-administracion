@@ -37,7 +37,7 @@ public class MensajeService {
             UUID remitenteId,
             EnviarMensajeRequest request
     ) {
-        if (request == null || request.getContenido() == null) {
+        if (request == null || request.getContenido() == null || request.getContenido().isBlank()) {
             throw new BusinessException(
                     "MENSAJE_INVALIDO",
                     "El contenido del mensaje es obligatorio",
