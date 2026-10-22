@@ -20,13 +20,16 @@ public class MensajeService {
 
     private final MessageRepository messageRepository;
     private final UsuarioJpaRepository usuarioRepository;
+    private final ConversationResolver conversationResolver;
 
     public MensajeService(
             MessageRepository messageRepository,
-            UsuarioJpaRepository usuarioRepository
+            UsuarioJpaRepository usuarioRepository,
+            ConversationResolver conversationResolver
     ) {
         this.messageRepository = messageRepository;
         this.usuarioRepository = usuarioRepository;
+        this.conversationResolver = conversationResolver;
     }
 
     @Transactional
@@ -78,6 +81,7 @@ public class MensajeService {
                 destinatarioId,
                 contenido
         );
+        mensaje.setConversation(conversationResolver.resolve(remitenteId, destinatarioId));
 
         messageRepository.save(mensaje);
 

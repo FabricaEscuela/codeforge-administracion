@@ -38,6 +38,11 @@ public class ProjectLikeAdapter implements ProjectLikePort {
     }
 
     @Override
+    public boolean eliminarLike(Long projectId, UUID usuarioId) {
+        return projectLikeRepository.deleteByProject_IdAndUsuarioId(projectId, usuarioId) > 0;
+    }
+
+    @Override
     public long contarLikes(Long projectId) {
         return projectLikeRepository.countByProject_Id(projectId);
     }

@@ -35,6 +35,16 @@ public class ProjectLikeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "Remove my like from a project",
+            description = "Removes the authenticated user's like from the given project")
+    @DeleteMapping("/{projectId}/likes")
+    public ResponseEntity<ProjectLikeResponse> unlikeProject(
+            @PathVariable Long projectId,
+            @AuthenticationPrincipal UUID usuarioId
+    ) {
+        return ResponseEntity.ok(projectLikeService.unlikeProject(projectId, usuarioId));
+    }
+
     @Operation(summary = "List my liked projects",
             description = "Returns the projects liked by the authenticated user, most recent first")
     @GetMapping("/likes/me")

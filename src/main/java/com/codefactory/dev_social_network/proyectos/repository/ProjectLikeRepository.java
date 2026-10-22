@@ -12,6 +12,8 @@ public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> 
 
     boolean existsByProject_IdAndUsuarioId(Long projectId, UUID usuarioId);
 
+    long deleteByProject_IdAndUsuarioId(Long projectId, UUID usuarioId);
+
     long countByProject_Id(Long projectId);
 
     @Query("select l from ProjectLike l join fetch l.project "

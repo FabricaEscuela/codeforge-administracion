@@ -15,6 +15,8 @@ public interface ProjectLikePort {
      */
     boolean registrarLike(Long projectId, UUID usuarioId);
 
+    boolean eliminarLike(Long projectId, UUID usuarioId);
+
     long contarLikes(Long projectId);
 
     List<LikedProjectResponse> listarPorUsuario(UUID usuarioId);

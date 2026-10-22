@@ -10,5 +10,7 @@ public interface ProjectLikeService {
 
     ProjectLikeResponse likeProject(Long projectId, UUID usuarioId);
 
+    ProjectLikeResponse unlikeProject(Long projectId, UUID usuarioId);
+
     List<LikedProjectResponse> getMyLikedProjects(UUID usuarioId);
 }

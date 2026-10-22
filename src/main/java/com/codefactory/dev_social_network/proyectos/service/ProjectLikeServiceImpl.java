@@ -47,6 +47,18 @@ public class ProjectLikeServiceImpl implements ProjectLikeService {
     }
 
     @Override
+    @Transactional
+    public ProjectLikeResponse unlikeProject(Long projectId, UUID usuarioId) {
+        ProjectSummary project = projectFinderPort.buscarResumenPorId(projectId)
+                .orElseThrow(() -> new BusinessException(
+                        "PROJECT_NOT_FOUND", MSG_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        projectLikePort.eliminarLike(projectId, usuarioId);
+        long total = projectLikePort.contarLikes(projectId);
+        return new ProjectLikeResponse(project.id(), project.title(), total, false);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<LikedProjectResponse> getMyLikedProjects(UUID usuarioId) {
         return projectLikePort.listarPorUsuario(usuarioId);
