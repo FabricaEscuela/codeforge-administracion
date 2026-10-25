@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProjectCommentJpaRepository extends JpaRepository<ProjectCommentEntity, UUID> {
-    List<ProjectCommentEntity> findByProjectIdOrderByCreatedAtAsc(Long projectId);
+    List<ProjectCommentEntity> findByProjectIdOrderByCreatedAtAsc(UUID projectId);
 }

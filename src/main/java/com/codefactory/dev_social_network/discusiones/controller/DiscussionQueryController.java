@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/discussions")
@@ -58,7 +59,7 @@ public class DiscussionQueryController {
             @ApiResponse(responseCode = "404", description = "Discussion not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<DiscussionDetailResponse> getDiscussion(@PathVariable("id") Long id) {
+    public ResponseEntity<DiscussionDetailResponse> getDiscussion(@PathVariable("id") UUID id) {
         return ResponseEntity.ok(getDiscussionUseCase.getById(id));
     }
 }

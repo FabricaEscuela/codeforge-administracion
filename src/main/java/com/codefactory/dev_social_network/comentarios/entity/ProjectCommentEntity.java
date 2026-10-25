@@ -20,7 +20,7 @@ public class ProjectCommentEntity {
     private UUID id;
 
     @Column(name = "id_proyecto", nullable = false)
-    private Long projectId;
+    private UUID projectId;
 
     @Column(name = "id_usuario", nullable = false)
     private UUID userId;
@@ -34,7 +34,7 @@ public class ProjectCommentEntity {
     protected ProjectCommentEntity() {
     }
 
-    public ProjectCommentEntity(Long projectId, UUID userId, String content) {
+    public ProjectCommentEntity(UUID projectId, UUID userId, String content) {
         this.projectId = projectId;
         this.userId = userId;
         this.content = content;
@@ -51,7 +51,7 @@ public class ProjectCommentEntity {
         return id;
     }
 
-    public Long getProjectId() {
+    public UUID getProjectId() {
         return projectId;
     }
 
