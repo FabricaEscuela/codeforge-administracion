@@ -5,4 +5,6 @@ import java.util.UUID;
 public interface UserRegistrationPort {
 
     UUID registrar(String username, String nombre, String apellido, String email);
+
+    void eliminar(UUID usuarioId);
 }
