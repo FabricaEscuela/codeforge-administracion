@@ -178,6 +178,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         return new UserProfileResponseDTO(
                 usuario.getId(),
+                usuario.getUsername(),
                 usuario.getNombre(),
                 usuario.getApellido(),
                 usuario.getEmail(),
