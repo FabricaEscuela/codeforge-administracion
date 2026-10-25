@@ -6,6 +6,7 @@ import com.codefactory.dev_social_network.comentarios.interfaces.ProjectCommentR
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class ProjectCommentRepositoryAdapter implements ProjectCommentRepositoryPort {
@@ -24,7 +25,7 @@ public class ProjectCommentRepositoryAdapter implements ProjectCommentRepository
     }
 
     @Override
-    public List<ProjectComment> findByProjectId(Long projectId) {
+    public List<ProjectComment> findByProjectId(UUID projectId) {
         return repository.findByProjectIdOrderByCreatedAtAsc(projectId).stream()
                 .map(ProjectCommentRepositoryAdapter::toDomain)
                 .toList();

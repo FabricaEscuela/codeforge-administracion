@@ -37,7 +37,7 @@ public class ProjectCommentController {
     @Operation(summary = "Comment on a project")
     public ResponseEntity<PublishedCommentResponse> create(
             @AuthenticationPrincipal UUID userId,
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @Valid @RequestBody CreateCommentRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -46,7 +46,7 @@ public class ProjectCommentController {
 
     @GetMapping
     @Operation(summary = "List comments on a project")
-    public ResponseEntity<List<CommentResponse>> list(@PathVariable Long projectId) {
+    public ResponseEntity<List<CommentResponse>> list(@PathVariable UUID projectId) {
         return ResponseEntity.ok(listCommentsUseCase.list(projectId));
     }
 }

@@ -9,8 +9,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.Customizer;
@@ -42,12 +45,21 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(
-                (request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-            ))
+            .exceptionHandling(exceptions ->
+                exceptions.authenticationEntryPoint(this::responderNoAutenticado))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    void responderNoAutenticado(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(
+            "{\"errorCode\":\"AUTHENTICATION_REQUIRED\","
+                + "\"message\":\"Debes iniciar sesion para continuar\"}");
     }
 
     @Bean

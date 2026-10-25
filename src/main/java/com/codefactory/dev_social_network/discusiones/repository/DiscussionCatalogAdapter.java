@@ -20,16 +20,16 @@ public class DiscussionCatalogAdapter implements DiscussionCatalogPort {
     @Override
     @Transactional(readOnly = true)
     public List<DiscussionListItem> listRecent() {
-        return discussionRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+        return discussionRepository.findAll(Sort.by(Sort.Direction.DESC, "fechaCreacion"))
                 .stream()
                 .map(discussion -> new DiscussionListItem(
                         discussion.getId(),
-                        discussion.getUserId(),
-                        discussion.getTechnologyId(),
-                        discussion.getTitle(),
-                        discussion.getContent(),
-                        discussion.getStatus(),
-                        discussion.getCreatedAt()
+                        discussion.getAutorId(),
+                        discussion.getIdTecnologia(),
+                        discussion.getTitulo(),
+                        discussion.getContenido(),
+                        discussion.getEstado(),
+                        discussion.getFechaCreacion()
                 ))
                 .toList();
     }

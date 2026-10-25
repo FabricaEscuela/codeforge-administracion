@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record ProjectComment(
         UUID id,
-        Long projectId,
+        UUID projectId,
         UUID userId,
         String content,
         OffsetDateTime createdAt

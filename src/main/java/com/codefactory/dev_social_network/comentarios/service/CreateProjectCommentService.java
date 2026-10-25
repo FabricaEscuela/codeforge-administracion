@@ -7,7 +7,7 @@ import com.codefactory.dev_social_network.comentarios.dto.PublishedCommentRespon
 import com.codefactory.dev_social_network.comentarios.interfaces.CommentAuthorDirectoryPort;
 import com.codefactory.dev_social_network.comentarios.interfaces.CreateProjectCommentUseCase;
 import com.codefactory.dev_social_network.comentarios.interfaces.ProjectCommentRepositoryPort;
-import com.codefactory.dev_social_network.proyectos.interfaces.ProjectFinderPort;
+import com.codefactory.dev_social_network.comentarios.repository.ProyectoRefRepository;
 import com.codefactory.dev_social_network.shared.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,23 +20,25 @@ import java.util.UUID;
 @Service
 public class CreateProjectCommentService implements CreateProjectCommentUseCase {
 
-    private final ProjectFinderPort projectFinderPort;
+    private final ProyectoRefRepository proyectoRefRepository;
     private final ProjectCommentRepositoryPort commentRepository;
     private final CommentAuthorDirectoryPort authorDirectory;
 
-    public CreateProjectCommentService(ProjectFinderPort projectFinderPort,
+    public CreateProjectCommentService(ProyectoRefRepository proyectoRefRepository,
                                        ProjectCommentRepositoryPort commentRepository,
                                        CommentAuthorDirectoryPort authorDirectory) {
-        this.projectFinderPort = projectFinderPort;
+        this.proyectoRefRepository = proyectoRefRepository;
         this.commentRepository = commentRepository;
         this.authorDirectory = authorDirectory;
     }
 
     @Override
     @Transactional
-    public PublishedCommentResponse create(UUID userId, Long projectId, CreateCommentRequest request) {
-        projectFinderPort.buscarResumenPorId(projectId).orElseThrow(() -> new BusinessException(
-                "PROJECT_NOT_FOUND", "El proyecto no existe", HttpStatus.NOT_FOUND));
+    public PublishedCommentResponse create(UUID userId, UUID projectId, CreateCommentRequest request) {
+        if (!proyectoRefRepository.existsById(projectId)) {
+            throw new BusinessException(
+                    "PROJECT_NOT_FOUND", "El proyecto no existe", HttpStatus.NOT_FOUND);
+        }
 
         ProjectComment saved = commentRepository.save(
                 new ProjectComment(null, projectId, userId, request.comentario().trim(), null));
