@@ -17,6 +17,3 @@ Java 21 · Spring Boot · Maven · PostgreSQL · Docker
 | Seguimiento | `/api/v1/following` |
 | Mensajes privados | `/api/v1/mensajes` |
 
-## Ejecución local
-1. Copiar `application-example.properties` a `application.properties` y completar la conexión a PostgreSQL.
-2. Ejecutar `./mvnw spring-boot:run` (puerto 8080).
