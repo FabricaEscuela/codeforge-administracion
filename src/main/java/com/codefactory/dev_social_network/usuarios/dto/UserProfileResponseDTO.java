@@ -7,6 +7,7 @@ import com.codefactory.dev_social_network.usuarios.entity.ExperienceLevel;
 
 public record UserProfileResponseDTO(
         UUID userId,
+        String username,
         String nombre,
         String apellidos,
         String email,

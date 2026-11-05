@@ -21,4 +21,9 @@ public class UserRegistrationAdapter implements UserRegistrationPort {
         Usuario guardado = jpaRepository.save(new Usuario(username, nombre, apellido, email));
         return guardado.getId();
     }
+
+    @Override
+    public void eliminar(UUID usuarioId) {
+        jpaRepository.deleteById(usuarioId);
+    }
 }
