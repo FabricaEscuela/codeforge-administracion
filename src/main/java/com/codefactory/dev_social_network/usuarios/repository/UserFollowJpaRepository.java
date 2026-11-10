@@ -6,8 +6,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.codefactory.dev_social_network.usuarios.entity.UserFollowEntity;
+import com.codefactory.dev_social_network.usuarios.entity.UserFollowId;
 
-public interface UserFollowJpaRepository extends JpaRepository<UserFollowEntity, UUID> {
+public interface UserFollowJpaRepository extends JpaRepository<UserFollowEntity, UserFollowId> {
 
     boolean existsByFollowerIdAndFollowedId(UUID followerId, UUID followedId);
 
