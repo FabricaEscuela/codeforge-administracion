@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +49,6 @@ public class ListLegacyConversationMessagesService implements ListLegacyConversa
 
     private static LegacyMessageResponse toResponse(MessageEntity message, UUID conversationId) {
         return new LegacyMessageResponse(message.getId(), conversationId, message.getRemitenteId(),
-                message.getContenido(), message.getFechaEnvio().atZone(ZoneId.systemDefault()).toInstant());
+                message.getContenido(), message.getFechaEnvio().toInstant());
     }
 }

@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +23,7 @@ public class MessageEntity {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "conversation_id")
+    @JoinColumn(name = "id_conversacion", nullable = false)
     private ConversationEntity conversation;
 
     @Column(name = "remitente_id", nullable = false)
@@ -36,7 +36,7 @@ public class MessageEntity {
     private String contenido;
 
     @Column(name = "fecha_envio", nullable = false)
-    private LocalDateTime fechaEnvio;
+    private OffsetDateTime fechaEnvio;
 
     protected MessageEntity() {
     }
@@ -54,7 +54,7 @@ public class MessageEntity {
     @PrePersist
     protected void antesDeGuardar() {
         if (fechaEnvio == null) {
-            fechaEnvio = LocalDateTime.now();
+            fechaEnvio = OffsetDateTime.now();
         }
     }
 
@@ -82,7 +82,7 @@ public class MessageEntity {
         return contenido;
     }
 
-    public LocalDateTime getFechaEnvio() {
+    public OffsetDateTime getFechaEnvio() {
         return fechaEnvio;
     }
 }

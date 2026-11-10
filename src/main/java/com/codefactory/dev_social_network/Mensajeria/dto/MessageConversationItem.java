@@ -1,6 +1,6 @@
 package com.codefactory.dev_social_network.Mensajeria.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public record MessageConversationItem(
@@ -8,6 +8,6 @@ public record MessageConversationItem(
         UUID remitenteId,
         UUID destinatarioId,
         String contenido,
-        LocalDateTime fechaEnvio
+        OffsetDateTime fechaEnvio
 ) {
 }
