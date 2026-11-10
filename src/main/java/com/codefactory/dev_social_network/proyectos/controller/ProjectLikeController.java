@@ -28,7 +28,7 @@ public class ProjectLikeController {
             description = "Registers a like from the authenticated user on the given project")
     @PostMapping("/{projectId}/likes")
     public ResponseEntity<ProjectLikeResponse> likeProject(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @AuthenticationPrincipal UUID usuarioId
     ) {
         ProjectLikeResponse response = projectLikeService.likeProject(projectId, usuarioId);
@@ -39,7 +39,7 @@ public class ProjectLikeController {
             description = "Removes the authenticated user's like from the given project")
     @DeleteMapping("/{projectId}/likes")
     public ResponseEntity<ProjectLikeResponse> unlikeProject(
-            @PathVariable Long projectId,
+            @PathVariable UUID projectId,
             @AuthenticationPrincipal UUID usuarioId
     ) {
         return ResponseEntity.ok(projectLikeService.unlikeProject(projectId, usuarioId));

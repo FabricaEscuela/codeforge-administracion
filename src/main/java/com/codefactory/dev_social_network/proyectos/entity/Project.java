@@ -1,6 +1,5 @@
 package com.codefactory.dev_social_network.proyectos.entity;
 
-import com.codefactory.dev_social_network.proyectos.entity.Technology;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -8,44 +7,44 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "proyectos")
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "usuario_id", nullable = false)
     private UUID userId;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "titulo", nullable = false, length = 50)
     private String title;
 
-    @Column(nullable = false, length = 250)
+    @Column(name = "descripcion", nullable = false, length = 250)
     private String description;
 
-    @Column(name = "repository_url")
+    @Column(name = "repositorio_url")
     private String repositoryUrl;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "ultima_actualizacion", nullable = false)
     private OffsetDateTime updatedAt;
 
     @ManyToMany
     @JoinTable(
-            name = "project_technologies",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "technology_id")
+            name = "proyecto_tecnologias",
+            joinColumns = @JoinColumn(name = "id_proyecto"),
+            inverseJoinColumns = @JoinColumn(name = "id_tecnologia")
     )
     private List<Technology> technologies;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

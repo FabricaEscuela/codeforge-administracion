@@ -6,42 +6,33 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(
-        name = "project_likes",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_project_like_project_user",
-                columnNames = {"project_id", "usuario_id"}
-        )
-)
+@Table(name = "likes_proyecto")
+@IdClass(ProjectLikeId.class)
 public class ProjectLike {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @Column(name = "id_proyecto", nullable = false)
+    private UUID projectId;
 
     // Referencia por id al módulo usuarios (sin relación JPA entre módulos)
-    @Column(name = "usuario_id", nullable = false)
+    @Id
+    @Column(name = "id_usuario", nullable = false)
     private UUID usuarioId;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false)
     private OffsetDateTime createdAt;
 
     protected ProjectLike() {
         // Requerido por JPA
     }
 
-    public ProjectLike(Project project, UUID usuarioId) {
-        this.project = project;
+    public ProjectLike(UUID projectId, UUID usuarioId) {
+        this.projectId = projectId;
         this.usuarioId = usuarioId;
         this.createdAt = OffsetDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public Project getProject() { return project; }
+    public UUID getProjectId() { return projectId; }
     public UUID getUsuarioId() { return usuarioId; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
 }

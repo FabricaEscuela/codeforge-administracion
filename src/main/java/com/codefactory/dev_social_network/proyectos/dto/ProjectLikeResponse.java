@@ -1,7 +1,9 @@
 package com.codefactory.dev_social_network.proyectos.dto;
 
+import java.util.UUID;
+
 public record ProjectLikeResponse(
-        Long projectId,
+        UUID projectId,
         String projectTitle,
         long likesCount,
         boolean liked

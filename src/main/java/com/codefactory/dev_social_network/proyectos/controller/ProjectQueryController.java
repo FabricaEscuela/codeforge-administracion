@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -31,7 +32,7 @@ public class ProjectQueryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectDetail> getById(@PathVariable Long id) {
+    public ResponseEntity<ProjectDetail> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(getProjectUseCase.getById(id));
     }
 }

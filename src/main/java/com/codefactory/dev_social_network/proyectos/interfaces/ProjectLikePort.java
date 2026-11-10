@@ -7,17 +7,11 @@ import java.util.UUID;
 
 public interface ProjectLikePort {
 
-    /**
-     * 
-     *
-     * @return 
-     *         
-     */
-    boolean registrarLike(Long projectId, UUID usuarioId);
+    boolean registrarLike(UUID projectId, UUID usuarioId);
 
-    boolean eliminarLike(Long projectId, UUID usuarioId);
+    boolean eliminarLike(UUID projectId, UUID usuarioId);
 
-    long contarLikes(Long projectId);
+    long contarLikes(UUID projectId);
 
     List<LikedProjectResponse> listarPorUsuario(UUID usuarioId);
 }

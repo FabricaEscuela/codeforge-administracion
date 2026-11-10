@@ -31,7 +31,7 @@ public class ProjectLikeServiceImpl implements ProjectLikeService {
 
     @Override
     @Transactional
-    public ProjectLikeResponse likeProject(Long projectId, UUID usuarioId) {
+    public ProjectLikeResponse likeProject(UUID projectId, UUID usuarioId) {
 
         ProjectSummary project = projectFinderPort.buscarResumenPorId(projectId)
                 .orElseThrow(() -> new BusinessException(
@@ -48,7 +48,7 @@ public class ProjectLikeServiceImpl implements ProjectLikeService {
 
     @Override
     @Transactional
-    public ProjectLikeResponse unlikeProject(Long projectId, UUID usuarioId) {
+    public ProjectLikeResponse unlikeProject(UUID projectId, UUID usuarioId) {
         ProjectSummary project = projectFinderPort.buscarResumenPorId(projectId)
                 .orElseThrow(() -> new BusinessException(
                         "PROJECT_NOT_FOUND", MSG_NOT_FOUND, HttpStatus.NOT_FOUND));
