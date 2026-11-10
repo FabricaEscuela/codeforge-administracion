@@ -1,6 +1,6 @@
 package com.codefactory.dev_social_network.usuarios.entity;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -21,17 +21,17 @@ public class Usuario {
     @Column(name = "username", unique = true, length = 50)
     private String username;
 
-    @Column(name = "nombre", nullable = false)
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "apellido", nullable = false)
+    @Column(name = "apellido", nullable = false, length = 100)
     private String apellido;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false, length = 255)
     private String email;
 
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDate fechaCreacion;
+    @Column(name = "fecha_registro", nullable = false)
+    private OffsetDateTime fechaRegistro;
 
     protected Usuario() {
     }
@@ -46,7 +46,7 @@ public class Usuario {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
-        this.fechaCreacion = LocalDate.now();
+        this.fechaRegistro = OffsetDateTime.now();
     }
 
     public UUID getId() {
@@ -69,8 +69,8 @@ public class Usuario {
         return email;
     }
 
-    public LocalDate getFechaCreacion() {
-        return fechaCreacion;
+    public OffsetDateTime getFechaRegistro() {
+        return fechaRegistro;
     }
 
     public void setNombre(String nombre) {
