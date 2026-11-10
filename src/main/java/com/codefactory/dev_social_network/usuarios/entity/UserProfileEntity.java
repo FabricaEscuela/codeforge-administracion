@@ -1,59 +1,61 @@
 package com.codefactory.dev_social_network.usuarios.entity;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.Year;
 import java.util.UUID;
-import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Column;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
+import jakarta.persistence.Table;
 
 @Entity
-@Table (name = "user_profiles")
+@Table(name = "perfiles_usuario")
 public class UserProfileEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn (name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id", nullable = false)
     private Usuario userId;
-    
-    @Column (name = "created_at", nullable = false)
-    private LocalDate createdAt;
 
-    @Column (name = "bio", unique = false, nullable = true, length = 500)
+    @Column(name = "fecha_creacion", nullable = false)
+    private OffsetDateTime createdAt;
+
+    @Column(name = "bio", length = 500)
     private String bio;
 
-    @Column (name = "completed_profile", unique = false, nullable = false)
-    private double completedProfile;
+    @Column(name = "nivel_completado", precision = 5, scale = 2)
+    private BigDecimal completedProfile;
 
-    @Column (name = "porfolio_link", unique = true, nullable = true)
+    @Column(name = "enlace_portafolio", length = 255)
     private String porfolioLink;
 
-    @Column (name = "dev_initial_date", unique = true, nullable = true)
-    private LocalDate devInitialDate;
+    // La BD guarda el año en que empezó a programar; los años de experiencia se calculan
+    @Column(name = "anio_inicio_dev")
+    private Integer devStartYear;
 
-    @Column (name = "Seniority_level", unique = false, nullable = true)
+    @Column(name = "nivel", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private ExperienceLevel seniorityLevel;
 
-    @Column (name = "years_of_experience", nullable = true)
-    private Integer yearsOfExperience;
-
     protected UserProfileEntity() {}
 
-    public UserProfileEntity(Usuario userId){
+    public UserProfileEntity(Usuario userId) {
         this.userId = userId;
-        this.createdAt = LocalDate.now();
-        this.completedProfile = 0;
+        this.createdAt = OffsetDateTime.now();
+        this.completedProfile = BigDecimal.ZERO;
+        this.seniorityLevel = ExperienceLevel.ENTRY;
     }
 
     public UUID getId() {
@@ -64,7 +66,7 @@ public class UserProfileEntity {
         return userId;
     }
 
-    public LocalDate getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
@@ -76,11 +78,11 @@ public class UserProfileEntity {
         this.bio = bio;
     }
 
-    public double getCompletedProfile() {
+    public BigDecimal getCompletedProfile() {
         return completedProfile;
     }
 
-    public void setCompletedProfile(double completedProfile) {
+    public void setCompletedProfile(BigDecimal completedProfile) {
         this.completedProfile = completedProfile;
     }
 
@@ -92,12 +94,21 @@ public class UserProfileEntity {
         this.porfolioLink = porfolioLink;
     }
 
-    public LocalDate getDevInitialDate() {
-        return devInitialDate;
+    public Integer getDevStartYear() {
+        return devStartYear;
     }
 
-    public void setDevInitialDate(LocalDate devInitialDate) {
-        this.devInitialDate = devInitialDate;
+    public void setDevStartYear(Integer devStartYear) {
+        this.devStartYear = devStartYear;
+    }
+
+    /** Años de experiencia calculados a partir del año de inicio guardado en la BD. */
+    public Integer getYearsOfExperience() {
+        return devStartYear == null ? null : Year.now().getValue() - devStartYear;
+    }
+
+    public void setYearsOfExperience(Integer years) {
+        this.devStartYear = years == null ? null : Year.now().getValue() - years;
     }
 
     public ExperienceLevel getSeniorityLevel() {
@@ -106,13 +117,5 @@ public class UserProfileEntity {
 
     public void setSeniorityLevel(ExperienceLevel seniorityLevel) {
         this.seniorityLevel = seniorityLevel;
-    }
-
-    public Integer getYearsOfExperience() {
-        return yearsOfExperience;
-    }
-
-    public void setYearsOfExperience(Integer yearsOfExperience) {
-        this.yearsOfExperience = yearsOfExperience;
     }
 }

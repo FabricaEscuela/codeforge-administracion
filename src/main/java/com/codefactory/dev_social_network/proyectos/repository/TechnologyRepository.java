@@ -3,9 +3,12 @@ package com.codefactory.dev_social_network.proyectos.repository;
 import com.codefactory.dev_social_network.proyectos.entity.Technology;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TechnologyRepository extends JpaRepository<Technology, UUID> {
 
     boolean existsByNameIgnoreCase(String name);
+
+    Optional<Technology> findFirstByNameIgnoreCase(String name);
 }
