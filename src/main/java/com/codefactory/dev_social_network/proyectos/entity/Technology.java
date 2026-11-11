@@ -1,26 +1,33 @@
 package com.codefactory.dev_social_network.proyectos.entity;
 
-import jakarta.persistence.*;
+import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "technologies")
+@Table(name = "tecnologias")
 public class Technology {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(name = "nombre_tecnologia", nullable = false, length = 100, unique = true)
     private String name;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "tipo", nullable = false, length = 20)
     private String type;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

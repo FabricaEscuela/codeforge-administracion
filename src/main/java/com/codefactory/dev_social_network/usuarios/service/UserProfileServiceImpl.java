@@ -1,6 +1,7 @@
 package com.codefactory.dev_social_network.usuarios.service;
 
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import com.codefactory.dev_social_network.usuarios.entity.UserExternalLinksEntit
 import com.codefactory.dev_social_network.usuarios.entity.UserHabilitiesEntity;
 import com.codefactory.dev_social_network.usuarios.entity.UserProfileEntity;
 import com.codefactory.dev_social_network.usuarios.entity.Usuario;
+import com.codefactory.dev_social_network.proyectos.repository.TechnologyRepository;
 import com.codefactory.dev_social_network.usuarios.interfaces.UserProfileRepositoryPort;
 import com.codefactory.dev_social_network.usuarios.interfaces.UserProfileService;
 import com.codefactory.dev_social_network.usuarios.interfaces.UsuarioRepositoryPort;
@@ -34,6 +36,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final UserExternalLinksRepository externalLinksRepository;
     private final UserHabilitiesRepository habilitiesRepository;
     private final CatalogoTecnologiaServiceImpl catalogoTecnologiaService;
+    private final TechnologyRepository technologyRepository;
     private final EnlaceExternoValidator enlaceExternoValidator;
 
     public UserProfileServiceImpl(
@@ -42,12 +45,14 @@ public class UserProfileServiceImpl implements UserProfileService {
             UserExternalLinksRepository externalLinksRepository,
             UserHabilitiesRepository habilitiesRepository,
             CatalogoTecnologiaServiceImpl catalogoTecnologiaService,
+            TechnologyRepository technologyRepository,
             EnlaceExternoValidator enlaceExternoValidator) {
         this.userProfileRepositoryPort = userProfileRepositoryPort;
         this.usuarioRepositoryPort = usuarioRepositoryPort;
         this.externalLinksRepository = externalLinksRepository;
         this.habilitiesRepository = habilitiesRepository;
         this.catalogoTecnologiaService = catalogoTecnologiaService;
+        this.technologyRepository = technologyRepository;
         this.enlaceExternoValidator = enlaceExternoValidator;
     }
 
@@ -68,7 +73,10 @@ public class UserProfileServiceImpl implements UserProfileService {
         enlaceExternoValidator.validarPortafolio(request.getPortfolioLink());
 
         profile.setYearsOfExperience(request.getYearsOfExperience());
-        profile.setSeniorityLevel(parseLevel(request.getLevel()));
+        ExperienceLevel level = parseLevel(request.getLevel());
+        if (level != null) {
+            profile.setSeniorityLevel(level);
+        }
         profile.setPorfolioLink(request.getPortfolioLink());
 
         userProfileRepositoryPort.guardar(profile);
@@ -154,13 +162,19 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     private void syncHabilities(UserProfileEntity profile, UserProfileEditionRequestDTO request) {
-        habilitiesRepository.deleteByUserProfile_Id(profile.getId());
+        habilitiesRepository.deleteByProfileId(profile.getId());
 
         if (request.getSkills() != null) {
+            // Se evitan repetidos ("Java" y "java" son la misma tecnología)
+            LinkedHashSet<UUID> technologyIds = new LinkedHashSet<>();
             for (String skill : request.getSkills()) {
                 if (skill != null && !skill.isBlank()) {
-                    habilitiesRepository.save(new UserHabilitiesEntity(skill.trim(), profile));
+                    technologyRepository.findFirstByNameIgnoreCase(skill.trim())
+                            .ifPresent(technology -> technologyIds.add(technology.getId()));
                 }
+            }
+            for (UUID technologyId : technologyIds) {
+                habilitiesRepository.save(new UserHabilitiesEntity(profile.getId(), technologyId));
             }
         }
     }
@@ -171,10 +185,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                 .map(link -> new ExternalLinkDTO(link.getLinkName(), link.getLinkUrl()))
                 .toList();
 
-        List<String> skills = habilitiesRepository.findByUserProfile_Id(profile.getId())
-                .stream()
-                .map(UserHabilitiesEntity::getNameHability)
-                .toList();
+        List<String> skills = habilitiesRepository.findSkillNamesByProfileId(profile.getId());
 
         return new UserProfileResponseDTO(
                 usuario.getId(),

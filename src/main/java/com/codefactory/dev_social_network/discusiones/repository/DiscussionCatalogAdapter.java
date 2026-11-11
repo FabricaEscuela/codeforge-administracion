@@ -33,9 +33,9 @@ public class DiscussionCatalogAdapter implements DiscussionCatalogPort {
     @Override
     @Transactional(readOnly = true)
     public List<DiscussionListItem> listRecent() {
-        List<Discussion> discussions = discussionRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Discussion> discussions = discussionRepository.findAll(Sort.by(Sort.Direction.DESC, "fechaCreacion"));
         Set<UUID> authorIds = discussions.stream()
-                .map(Discussion::getUserId)
+                .map(Discussion::getAutorId)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
         Map<UUID, UserSummary> authors = authorDirectoryPort.findByIds(authorIds);
@@ -43,13 +43,13 @@ public class DiscussionCatalogAdapter implements DiscussionCatalogPort {
         return discussions.stream()
                 .map(discussion -> new DiscussionListItem(
                         discussion.getId(),
-                        discussion.getUserId(),
-                        discussion.getUserId() == null ? null : authors.get(discussion.getUserId()),
-                        discussion.getTechnologyId(),
-                        discussion.getTitle(),
-                        discussion.getContent(),
-                        discussion.getStatus(),
-                        discussion.getCreatedAt()
+                        discussion.getAutorId(),
+                        discussion.getAutorId() == null ? null : authors.get(discussion.getAutorId()),
+                        discussion.getIdTecnologia(),
+                        discussion.getTitulo(),
+                        discussion.getContenido(),
+                        discussion.getEstado(),
+                        discussion.getFechaCreacion()
                 ))
                 .toList();
     }

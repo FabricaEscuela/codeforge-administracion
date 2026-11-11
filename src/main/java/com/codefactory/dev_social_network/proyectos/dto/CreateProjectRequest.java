@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CreateProjectRequest {
 
@@ -19,7 +20,7 @@ public class CreateProjectRequest {
     private String repositoryUrl;
 
     @NotEmpty(message = "At least one technology is required")
-    private List<Long> technologyIds;
+    private List<UUID> technologyIds;
 
     public String getTitle() {
         return title;
@@ -45,11 +46,11 @@ public class CreateProjectRequest {
         this.repositoryUrl = repositoryUrl;
     }
 
-    public List<Long> getTechnologyIds() {
+    public List<UUID> getTechnologyIds() {
         return technologyIds;
     }
 
-    public void setTechnologyIds(List<Long> technologyIds) {
+    public void setTechnologyIds(List<UUID> technologyIds) {
         this.technologyIds = technologyIds;
     }
 }

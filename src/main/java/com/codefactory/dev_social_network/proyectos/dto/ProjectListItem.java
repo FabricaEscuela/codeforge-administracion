@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record ProjectListItem(
-        Long id,
+        UUID id,
         UUID userId,
         UserSummary author,
         String title,

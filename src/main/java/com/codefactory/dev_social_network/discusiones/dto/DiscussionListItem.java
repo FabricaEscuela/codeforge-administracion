@@ -7,10 +7,10 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public record DiscussionListItem(
-        Long id,
+        UUID id,
         UUID userId,
         UserSummary author,
-        Long technologyId,
+        UUID technologyId,
         String title,
         String content,
         DiscussionStatus status,

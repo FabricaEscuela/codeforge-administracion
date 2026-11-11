@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.codefactory.dev_social_network.catalogoTech.interfaces.CatalogoTecnologiaApi;
-import com.codefactory.dev_social_network.catalogoTech.repository.TecnologiesRepository;
+import com.codefactory.dev_social_network.proyectos.repository.TechnologyRepository;
 
 @Service
 public class CatalogoTecnologiaServiceImpl implements CatalogoTecnologiaApi {
 
-    private final TecnologiesRepository tecnologiasRepository;
+    private final TechnologyRepository technologyRepository;
 
-    public CatalogoTecnologiaServiceImpl(TecnologiesRepository tecnologiasRepository) {
-        this.tecnologiasRepository = tecnologiasRepository;
+    public CatalogoTecnologiaServiceImpl(TechnologyRepository technologyRepository) {
+        this.technologyRepository = technologyRepository;
     }
 
     @Override
@@ -22,15 +22,15 @@ public class CatalogoTecnologiaServiceImpl implements CatalogoTecnologiaApi {
             return true;
         }
         return nameTecnology.stream()
-                .allMatch(nombre -> tecnologiasRepository
-                        .existsByNameTecnologyIgnoreCase(nombre == null ? "" : nombre.trim()));
+                .allMatch(nombre -> technologyRepository
+                        .existsByNameIgnoreCase(nombre == null ? "" : nombre.trim()));
     }
 
     @Override
     public List<String> obtenerNombresDisponibles() {
-        return tecnologiasRepository.findAll()
+        return technologyRepository.findAll()
                 .stream()
-                .map(tecnologia -> tecnologia.getNameTecnology())
+                .map(tecnologia -> tecnologia.getName())
                 .toList();
     }
 
@@ -38,6 +38,6 @@ public class CatalogoTecnologiaServiceImpl implements CatalogoTecnologiaApi {
         if (nameTecnology == null || nameTecnology.isBlank()) {
             return false;
         }
-        return tecnologiasRepository.existsByNameTecnologyIgnoreCase(nameTecnology.trim());
+        return technologyRepository.existsByNameIgnoreCase(nameTecnology.trim());
     }
 }

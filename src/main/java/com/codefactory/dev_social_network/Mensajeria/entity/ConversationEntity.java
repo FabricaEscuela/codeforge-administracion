@@ -13,22 +13,22 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "conversations", uniqueConstraints = @UniqueConstraint(
-        name = "uk_conversation_participants",
-        columnNames = {"participant_one_id", "participant_two_id"}))
+@Table(name = "conversaciones", uniqueConstraints = @UniqueConstraint(
+        name = "uq_conversacion_participantes",
+        columnNames = {"id_participante_uno", "id_participante_dos"}))
 public class ConversationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "participant_one_id", nullable = false)
+    @Column(name = "id_participante_uno", nullable = false)
     private UUID participantOneId;
 
-    @Column(name = "participant_two_id", nullable = false)
+    @Column(name = "id_participante_dos", nullable = false)
     private UUID participantTwoId;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false)
     private OffsetDateTime createdAt;
 
     protected ConversationEntity() {

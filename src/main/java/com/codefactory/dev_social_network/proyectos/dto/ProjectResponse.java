@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class ProjectResponse {
 
-    private Long id;
+    private UUID id;
     private UUID userId;
     private String title;
     private String description;
@@ -14,11 +14,11 @@ public class ProjectResponse {
     private OffsetDateTime createdAt;
     private List<String> technologies;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

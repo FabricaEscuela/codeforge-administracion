@@ -16,18 +16,23 @@ public class TechnologyCatalogInitializer {
         return args -> {
             if (repository.count() != 0) return;
             List<Technology> seed = List.of(
-                    technology("Java", "LANGUAGE"), technology("JavaScript", "LANGUAGE"),
-                    technology("TypeScript", "LANGUAGE"), technology("Python", "LANGUAGE"),
-                    technology("C#", "LANGUAGE"), technology("Go", "LANGUAGE"),
-                    technology("Kotlin", "LANGUAGE"), technology("Rust", "LANGUAGE"),
-                    technology("SQL", "LANGUAGE"), technology("Swift", "LANGUAGE"),
+                    technology("Backend Developer", "ROL"), technology("Frontend Developer", "ROL"),
+                    technology("Full Stack Developer", "ROL"), technology("DevOps Engineer", "ROL"),
+                    technology("Java", "LENGUAJE"), technology("Python", "LENGUAJE"),
+                    technology("JavaScript", "LENGUAJE"), technology("TypeScript", "LENGUAJE"),
+                    technology("SQL", "LENGUAJE"),
                     technology("Spring Boot", "FRAMEWORK"), technology("React", "FRAMEWORK"),
-                    technology("Angular", "FRAMEWORK"), technology("Vue", "FRAMEWORK"),
-                    technology("Node.js", "FRAMEWORK"), technology("Django", "FRAMEWORK"),
-                    technology(".NET", "FRAMEWORK"), technology("Flutter", "FRAMEWORK"),
-                    technology("PostgreSQL", "DATABASE"), technology("Docker", "TOOL")
+                    technology("Angular", "FRAMEWORK"), technology("Django", "FRAMEWORK"),
+                    technology("Docker", "FRAMEWORK")
             );
-            repository.saveAll(seed);
+            try {
+                repository.saveAll(seed);
+            } catch (RuntimeException e) {
+                // Con roles de minimo privilegio (solo SELECT sobre tecnologias) el catalogo
+                // se carga desde seed.sql; no se aborta el arranque.
+                org.slf4j.LoggerFactory.getLogger(TechnologyCatalogInitializer.class)
+                        .warn("No se pudo sembrar el catalogo de tecnologias: {}", e.getMessage());
+            }
         };
     }
 

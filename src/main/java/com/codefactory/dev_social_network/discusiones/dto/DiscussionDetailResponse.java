@@ -7,13 +7,13 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public record DiscussionDetailResponse(
-        Long id,
+        UUID id,
         String title,
         DiscussionStatus status,
         UUID userId,
         UserSummary author,
         String content,
-        Long technologyId,
+        UUID technologyId,
         OffsetDateTime createdAt
 ) {
 }

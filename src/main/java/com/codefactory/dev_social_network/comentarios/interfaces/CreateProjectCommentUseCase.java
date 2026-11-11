@@ -6,5 +6,5 @@ import com.codefactory.dev_social_network.comentarios.dto.PublishedCommentRespon
 import java.util.UUID;
 
 public interface CreateProjectCommentUseCase {
-    PublishedCommentResponse create(UUID userId, Long projectId, CreateCommentRequest request);
+    PublishedCommentResponse create(UUID userId, UUID projectId, CreateCommentRequest request);
 }

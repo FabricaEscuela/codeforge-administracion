@@ -6,6 +6,8 @@ import com.codefactory.dev_social_network.proyectos.interfaces.ProjectDetailFind
 import com.codefactory.dev_social_network.shared.exception.ProyectoNoEncontradoException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class GetProjectUseCaseImpl implements GetProjectUseCase {
 
@@ -16,7 +18,7 @@ public class GetProjectUseCaseImpl implements GetProjectUseCase {
     }
 
     @Override
-    public ProjectDetail getById(Long projectId) {
+    public ProjectDetail getById(UUID projectId) {
         return projectDetailFinderPort.buscarDetallePorId(projectId)
                 .orElseThrow(ProyectoNoEncontradoException::new);
     }

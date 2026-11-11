@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface ProjectLikeService {
 
-    ProjectLikeResponse likeProject(Long projectId, UUID usuarioId);
+    ProjectLikeResponse likeProject(UUID projectId, UUID usuarioId);
 
-    ProjectLikeResponse unlikeProject(Long projectId, UUID usuarioId);
+    ProjectLikeResponse unlikeProject(UUID projectId, UUID usuarioId);
 
     List<LikedProjectResponse> getMyLikedProjects(UUID usuarioId);
 }

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class GetDiscussionUseCaseImpl implements GetDiscussionUseCase {
@@ -29,26 +30,26 @@ public class GetDiscussionUseCaseImpl implements GetDiscussionUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public DiscussionDetailResponse getById(Long discussionId) {
+    public DiscussionDetailResponse getById(UUID discussionId) {
 
         Discussion discussion = discussionFinderPort.findById(discussionId)
                 .orElseThrow(DiscusionNoEncontradaException::new);
 
         UserSummary author = null;
-        if (discussion.getUserId() != null) {
-            Map<java.util.UUID, UserSummary> authors = authorDirectoryPort.findByIds(Set.of(discussion.getUserId()));
-            author = authors.get(discussion.getUserId());
+        if (discussion.getAutorId() != null) {
+            Map<UUID, UserSummary> authors = authorDirectoryPort.findByIds(Set.of(discussion.getAutorId()));
+            author = authors.get(discussion.getAutorId());
         }
 
         return new DiscussionDetailResponse(
                 discussion.getId(),
-                discussion.getTitle(),
-                discussion.getStatus(),
-                discussion.getUserId(),
+                discussion.getTitulo(),
+                discussion.getEstado(),
+                discussion.getAutorId(),
                 author,
-                discussion.getContent(),
-                discussion.getTechnologyId(),
-                discussion.getCreatedAt()
+                discussion.getContenido(),
+                discussion.getIdTecnologia(),
+                discussion.getFechaCreacion()
         );
     }
 }

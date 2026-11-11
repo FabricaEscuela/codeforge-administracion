@@ -5,6 +5,7 @@ import com.codefactory.dev_social_network.proyectos.interfaces.ProjectFinderPort
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ProjectFinderAdapter implements ProjectFinderPort {
@@ -16,7 +17,7 @@ public class ProjectFinderAdapter implements ProjectFinderPort {
     }
 
     @Override
-    public Optional<ProjectSummary> buscarResumenPorId(Long projectId) {
+    public Optional<ProjectSummary> buscarResumenPorId(UUID projectId) {
         return projectRepository.findById(projectId)
                 .map(project -> new ProjectSummary(project.getId(), project.getTitle()));
     }

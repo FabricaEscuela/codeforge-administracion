@@ -1,12 +1,13 @@
 package com.codefactory.dev_social_network.proyectos.controller;
 
-import com.codefactory.dev_social_network.proyectos.entity.Technology;
-import com.codefactory.dev_social_network.proyectos.repository.TechnologyRepository;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.codefactory.dev_social_network.proyectos.repository.TechnologyRepository;
 
 @RestController
 @RequestMapping("/api/v1/technologies")
@@ -25,5 +26,5 @@ public class TechnologyController {
                 .toList();
     }
 
-    public record TechnologyOption(Long id, String name, String type) {}
+    public record TechnologyOption(UUID id, String name, String type) {}
 }

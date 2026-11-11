@@ -13,21 +13,21 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.JoinColumn;
 
 @Entity
-@Table(name = "user_external_links")
+@Table(name = "enlaces_externos")
 public class UserExternalLinksEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
-    @Column (name = "link_name", nullable = false)
+    @Column (name = "nombre_enlace", nullable = false, length = 50)
     private String linkName;
 
-    @Column (name = "link_url", nullable = false)
+    @Column (name = "url_enlace", nullable = false, length = 255)
     private String linkUrl;
 
     @ManyToOne
-    @JoinColumn (name = "userProfile_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn (name = "id_perfil", referencedColumnName = "id", nullable = false)
     private UserProfileEntity userProfile;
 
     protected UserExternalLinksEntity() {}
