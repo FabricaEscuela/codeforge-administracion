@@ -25,7 +25,14 @@ public class TechnologyCatalogInitializer {
                     technology("Angular", "FRAMEWORK"), technology("Django", "FRAMEWORK"),
                     technology("Docker", "FRAMEWORK")
             );
-            repository.saveAll(seed);
+            try {
+                repository.saveAll(seed);
+            } catch (RuntimeException e) {
+                // Con roles de minimo privilegio (solo SELECT sobre tecnologias) el catalogo
+                // se carga desde seed.sql; no se aborta el arranque.
+                org.slf4j.LoggerFactory.getLogger(TechnologyCatalogInitializer.class)
+                        .warn("No se pudo sembrar el catalogo de tecnologias: {}", e.getMessage());
+            }
         };
     }
 
