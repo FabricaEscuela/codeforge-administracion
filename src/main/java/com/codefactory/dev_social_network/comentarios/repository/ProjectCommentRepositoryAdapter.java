@@ -6,6 +6,7 @@ import com.codefactory.dev_social_network.comentarios.interfaces.ProjectCommentR
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -29,6 +30,11 @@ public class ProjectCommentRepositoryAdapter implements ProjectCommentRepository
         return repository.findByProjectIdOrderByCreatedAtAsc(projectId).stream()
                 .map(ProjectCommentRepositoryAdapter::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<ProjectComment> findById(UUID commentId) {
+        return repository.findById(commentId).map(ProjectCommentRepositoryAdapter::toDomain);
     }
 
     private static ProjectComment toDomain(ProjectCommentEntity entity) {
