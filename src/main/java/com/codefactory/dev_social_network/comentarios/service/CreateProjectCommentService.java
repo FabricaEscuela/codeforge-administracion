@@ -49,6 +49,6 @@ public class CreateProjectCommentService implements CreateProjectCommentUseCase 
 
     private static CommentResponse toResponse(ProjectComment comment, Map<UUID, String> usernames) {
         return new CommentResponse(comment.id(), comment.userId(), usernames.get(comment.userId()),
-                comment.content(), comment.createdAt());
+                comment.content(), comment.createdAt(), 0L, false);
     }
 }

@@ -46,7 +46,10 @@ public class ProjectCommentController {
 
     @GetMapping
     @Operation(summary = "List comments on a project")
-    public ResponseEntity<List<CommentResponse>> list(@PathVariable UUID projectId) {
-        return ResponseEntity.ok(listCommentsUseCase.list(projectId));
+    public ResponseEntity<List<CommentResponse>> list(
+            @AuthenticationPrincipal UUID userId,
+            @PathVariable UUID projectId
+    ) {
+        return ResponseEntity.ok(listCommentsUseCase.list(projectId, userId));
     }
 }

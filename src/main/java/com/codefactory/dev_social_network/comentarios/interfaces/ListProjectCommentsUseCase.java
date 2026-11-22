@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ListProjectCommentsUseCase {
-    List<CommentResponse> list(UUID projectId);
+    List<CommentResponse> list(UUID projectId, UUID userId);
 }

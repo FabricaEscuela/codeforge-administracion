@@ -26,6 +26,7 @@ import com.codefactory.dev_social_network.comentarios.dto.CommentResponse;
 import com.codefactory.dev_social_network.comentarios.dto.CreateCommentRequest;
 import com.codefactory.dev_social_network.comentarios.dto.PublishedCommentResponse;
 import com.codefactory.dev_social_network.comentarios.interfaces.CommentAuthorDirectoryPort;
+import com.codefactory.dev_social_network.comentarios.interfaces.CommentVotePort;
 import com.codefactory.dev_social_network.comentarios.interfaces.ProjectCommentRepositoryPort;
 import com.codefactory.dev_social_network.comentarios.repository.ProyectoRefRepository;
 import com.codefactory.dev_social_network.shared.exception.BusinessException;
@@ -42,13 +43,15 @@ class ProjectCommentServicesTest {
     private ProjectCommentRepositoryPort commentRepository;
     @Mock
     private CommentAuthorDirectoryPort authorDirectory;
+    @Mock
+    private CommentVotePort votePort;
 
     private CreateProjectCommentService crear() {
         return new CreateProjectCommentService(proyectoRefRepository, commentRepository, authorDirectory);
     }
 
     private ListProjectCommentsService listar() {
-        return new ListProjectCommentsService(proyectoRefRepository, commentRepository, authorDirectory);
+        return new ListProjectCommentsService(proyectoRefRepository, commentRepository, authorDirectory, votePort);
     }
 
     // ---------------------------------------------------------------- crear
@@ -109,7 +112,7 @@ class ProjectCommentServicesTest {
         when(authorDirectory.usernamesFor(Set.of(USUARIO))).thenReturn(Map.of(USUARIO, "LuisDev"));
 
         // Act
-        List<CommentResponse> respuesta = listar().list(PROYECTO);
+        List<CommentResponse> respuesta = listar().list(PROYECTO, USUARIO);
 
         // Assert
         assertThat(respuesta).hasSize(1);
@@ -124,7 +127,7 @@ class ProjectCommentServicesTest {
         when(proyectoRefRepository.existsById(PROYECTO)).thenReturn(false);
 
         // Act y Assert
-        assertThatThrownBy(() -> listar().list(PROYECTO))
+        assertThatThrownBy(() -> listar().list(PROYECTO, USUARIO))
                 .isInstanceOfSatisfying(BusinessException.class,
                         e -> assertThat(e.getMessage()).isEqualTo("El proyecto no existe"));
     }

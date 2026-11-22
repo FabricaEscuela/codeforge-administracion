@@ -8,6 +8,8 @@ public record CommentResponse(
         UUID idUsuario,
         String username,
         String comentario,
-        OffsetDateTime fechaCreacion
+        OffsetDateTime fechaCreacion,
+        long votos,
+        boolean votadoPorMi
 ) {
 }
