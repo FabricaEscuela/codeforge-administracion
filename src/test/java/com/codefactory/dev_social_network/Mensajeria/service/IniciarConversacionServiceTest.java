@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import com.codefactory.dev_social_network.Mensajeria.dto.InicioConversacionResultado;
-import com.codefactory.dev_social_network.Mensajeria.dto.IniciarConversacionRequest;
 import com.codefactory.dev_social_network.Mensajeria.entity.ConversationEntity;
 import com.codefactory.dev_social_network.Mensajeria.interfaces.ConversacionResolverPort;
 import com.codefactory.dev_social_network.bloqueos.interfaces.BloqueoInteraccionPort;
@@ -41,7 +40,7 @@ class IniciarConversacionServiceTest {
     void inicioBloqueado() {
         when(bloqueoPolicy.estaBloqueada(usuarioId, otroUsuarioId)).thenReturn(true);
 
-        assertThatThrownBy(() -> service.iniciar(usuarioId, request()))
+        assertThatThrownBy(() -> service.iniciar(usuarioId, otroUsuarioId))
                 .isInstanceOfSatisfying(BusinessException.class, exception -> {
                     assertThat(exception.getErrorCode()).isEqualTo("CONVERSACION_BLOQUEADA");
                     assertThat(exception.getStatus()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -60,7 +59,7 @@ class IniciarConversacionServiceTest {
         when(bloqueoPolicy.estaBloqueada(usuarioId, otroUsuarioId)).thenReturn(false);
         when(usuarioExistencia.existe(otroUsuarioId)).thenReturn(false);
 
-        assertThatThrownBy(() -> service.iniciar(usuarioId, request()))
+        assertThatThrownBy(() -> service.iniciar(usuarioId, otroUsuarioId))
                 .isInstanceOfSatisfying(BusinessException.class, exception -> {
                     assertThat(exception.getErrorCode()).isEqualTo("USUARIO_NO_EXISTE");
                     assertThat(exception.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -80,7 +79,7 @@ class IniciarConversacionServiceTest {
         when(usuarioExistencia.existe(otroUsuarioId)).thenReturn(true);
         when(conversationResolver.find(usuarioId, otroUsuarioId)).thenReturn(Optional.of(existente));
 
-        InicioConversacionResultado resultado = service.iniciar(usuarioId, request());
+        InicioConversacionResultado resultado = service.iniciar(usuarioId, otroUsuarioId);
 
         assertThat(resultado.creada()).isFalse();
         assertThat(resultado.conversacion().conversacionId()).isEqualTo(conversacionId);
@@ -98,14 +97,25 @@ class IniciarConversacionServiceTest {
         when(conversationResolver.find(usuarioId, otroUsuarioId)).thenReturn(Optional.empty());
         when(conversationResolver.crear(usuarioId, otroUsuarioId)).thenReturn(creada);
 
-        InicioConversacionResultado resultado = service.iniciar(usuarioId, request());
+        InicioConversacionResultado resultado = service.iniciar(usuarioId, otroUsuarioId);
 
         assertThat(resultado.creada()).isTrue();
         assertThat(resultado.conversacion().conversacionId()).isEqualTo(conversacionId);
         verify(conversationResolver).crear(usuarioId, otroUsuarioId);
     }
 
-    private IniciarConversacionRequest request() {
-        return new IniciarConversacionRequest(otroUsuarioId);
+    @Test
+    @DisplayName("Rechaza iniciar conversación cuando el identificador no es válido")
+    void identificadorInvalido() {
+        assertThatThrownBy(() -> service.iniciar(usuarioId, null))
+                .isInstanceOfSatisfying(BusinessException.class, exception -> {
+                    assertThat(exception.getErrorCode()).isEqualTo("USUARIO_NO_EXISTE");
+                    assertThat(exception.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+                    assertThat(exception.getMessage()).isEqualTo("El usuario no existe");
+                });
+
+        verifyNoInteractions(usuarioExistencia);
+        verify(conversationResolver, never()).find(any(UUID.class), any(UUID.class));
+        verify(conversationResolver, never()).crear(any(UUID.class), any(UUID.class));
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.codefactory.dev_social_network.Mensajeria.dto.ConversacionResponse;
 import com.codefactory.dev_social_network.Mensajeria.dto.InicioConversacionResultado;
-import com.codefactory.dev_social_network.Mensajeria.dto.IniciarConversacionRequest;
 import com.codefactory.dev_social_network.Mensajeria.entity.ConversationEntity;
 import com.codefactory.dev_social_network.Mensajeria.interfaces.ConversacionResolverPort;
 import com.codefactory.dev_social_network.Mensajeria.interfaces.IniciarConversacionUseCase;
@@ -34,9 +33,7 @@ public class IniciarConversacionService implements IniciarConversacionUseCase {
 
     @Override
     @Transactional
-    public InicioConversacionResultado iniciar(UUID usuarioId, IniciarConversacionRequest request) {
-        UUID otroUsuarioId = request == null ? null : request.getUsuarioId();
-
+    public InicioConversacionResultado iniciar(UUID usuarioId, UUID otroUsuarioId) {
         if (bloqueoPolicy.estaBloqueada(usuarioId, otroUsuarioId)) {
             throw new BusinessException(
                     "CONVERSACION_BLOQUEADA",

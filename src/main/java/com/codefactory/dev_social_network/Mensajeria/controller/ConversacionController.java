@@ -14,6 +14,7 @@ import com.codefactory.dev_social_network.Mensajeria.dto.ConversacionResponse;
 import com.codefactory.dev_social_network.Mensajeria.dto.InicioConversacionResultado;
 import com.codefactory.dev_social_network.Mensajeria.dto.IniciarConversacionRequest;
 import com.codefactory.dev_social_network.Mensajeria.interfaces.IniciarConversacionUseCase;
+import com.codefactory.dev_social_network.shared.web.UuidParser;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,7 +44,8 @@ public class ConversacionController {
             @AuthenticationPrincipal UUID usuarioId,
             @Valid @RequestBody IniciarConversacionRequest request
     ) {
-        InicioConversacionResultado resultado = iniciarConversacionUseCase.iniciar(usuarioId, request);
+        UUID otroUsuarioId = UuidParser.parseOrNull(request.getUsuarioId());
+        InicioConversacionResultado resultado = iniciarConversacionUseCase.iniciar(usuarioId, otroUsuarioId);
 
         return ResponseEntity
                 .status(resultado.creada() ? HttpStatus.CREATED : HttpStatus.OK)

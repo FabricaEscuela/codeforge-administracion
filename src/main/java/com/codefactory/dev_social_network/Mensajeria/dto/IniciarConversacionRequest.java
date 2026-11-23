@@ -1,26 +1,21 @@
 package com.codefactory.dev_social_network.Mensajeria.dto;
 
-import java.util.UUID;
-
-import jakarta.validation.constraints.NotNull;
-
 public class IniciarConversacionRequest {
 
-    @NotNull(message = "El usuario es obligatorio")
-    private UUID usuarioId;
+    private String usuarioId;
 
     public IniciarConversacionRequest() {
     }
 
-    public IniciarConversacionRequest(UUID usuarioId) {
+    public IniciarConversacionRequest(String usuarioId) {
         this.usuarioId = usuarioId;
     }
 
-    public UUID getUsuarioId() {
+    public String getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(UUID usuarioId) {
+    public void setUsuarioId(String usuarioId) {
         this.usuarioId = usuarioId;
     }
 }

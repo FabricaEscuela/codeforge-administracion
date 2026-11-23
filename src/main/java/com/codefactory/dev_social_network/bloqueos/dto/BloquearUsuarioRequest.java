@@ -1,26 +1,21 @@
 package com.codefactory.dev_social_network.bloqueos.dto;
 
-import java.util.UUID;
-
-import jakarta.validation.constraints.NotNull;
-
 public class BloquearUsuarioRequest {
 
-    @NotNull(message = "El usuario es obligatorio")
-    private UUID usuarioId;
+    private String usuarioId;
 
     public BloquearUsuarioRequest() {
     }
 
-    public BloquearUsuarioRequest(UUID usuarioId) {
+    public BloquearUsuarioRequest(String usuarioId) {
         this.usuarioId = usuarioId;
     }
 
-    public UUID getUsuarioId() {
+    public String getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(UUID usuarioId) {
+    public void setUsuarioId(String usuarioId) {
         this.usuarioId = usuarioId;
     }
 }

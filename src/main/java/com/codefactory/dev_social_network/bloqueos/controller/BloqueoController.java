@@ -16,6 +16,7 @@ import com.codefactory.dev_social_network.bloqueos.dto.BloqueoResponse;
 import com.codefactory.dev_social_network.bloqueos.dto.BloquearUsuarioRequest;
 import com.codefactory.dev_social_network.bloqueos.interfaces.BloquearUsuarioUseCase;
 import com.codefactory.dev_social_network.bloqueos.interfaces.DesbloquearUsuarioUseCase;
+import com.codefactory.dev_social_network.shared.web.UuidParser;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +49,8 @@ public class BloqueoController {
             @AuthenticationPrincipal UUID blockerId,
             @Valid @RequestBody BloquearUsuarioRequest request
     ) {
-        BloqueoResponse response = bloquearUsuarioUseCase.bloquear(blockerId, request.getUsuarioId());
+        UUID usuarioId = UuidParser.parseOrNull(request.getUsuarioId());
+        BloqueoResponse response = bloquearUsuarioUseCase.bloquear(blockerId, usuarioId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
