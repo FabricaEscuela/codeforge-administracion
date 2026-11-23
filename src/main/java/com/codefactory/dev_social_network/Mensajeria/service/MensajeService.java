@@ -4,8 +4,9 @@ import com.codefactory.dev_social_network.Mensajeria.dto.EnviarMensajeRequest;
 import com.codefactory.dev_social_network.Mensajeria.dto.MensajeResponse;
 import com.codefactory.dev_social_network.Mensajeria.entity.MessageEntity;
 import com.codefactory.dev_social_network.Mensajeria.repository.MessageRepository;
+import com.codefactory.dev_social_network.bloqueos.interfaces.BloqueoInteraccionPort;
 import com.codefactory.dev_social_network.shared.exception.BusinessException;
-import com.codefactory.dev_social_network.usuarios.repository.UsuarioJpaRepository;
+import com.codefactory.dev_social_network.usuarios.interfaces.UsuarioExistenciaPort;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,20 @@ public class MensajeService {
     private static final int MAX_CARACTERES = 2000;
 
     private final MessageRepository messageRepository;
-    private final UsuarioJpaRepository usuarioRepository;
+    private final UsuarioExistenciaPort usuarioExistencia;
     private final ConversationResolver conversationResolver;
+    private final BloqueoInteraccionPort bloqueoPolicy;
 
     public MensajeService(
             MessageRepository messageRepository,
-            UsuarioJpaRepository usuarioRepository,
-            ConversationResolver conversationResolver
+            UsuarioExistenciaPort usuarioExistencia,
+            ConversationResolver conversationResolver,
+            BloqueoInteraccionPort bloqueoPolicy
     ) {
         this.messageRepository = messageRepository;
-        this.usuarioRepository = usuarioRepository;
+        this.usuarioExistencia = usuarioExistencia;
         this.conversationResolver = conversationResolver;
+        this.bloqueoPolicy = bloqueoPolicy;
     }
 
     @Transactional
@@ -68,11 +72,19 @@ public class MensajeService {
 
 
         if (destinatarioId == null
-                || !usuarioRepository.existsById(destinatarioId)) {
+                || !usuarioExistencia.existe(destinatarioId)) {
             throw new BusinessException(
                     "USUARIO_NO_EXISTE",
                     "Usuario no existe",
                     HttpStatus.NOT_FOUND
+            );
+        }
+
+        if (bloqueoPolicy.estaBloqueada(remitenteId, destinatarioId)) {
+            throw new BusinessException(
+                    "ENVIO_BLOQUEADO",
+                    "No es posible enviar mensajes a este usuario",
+                    HttpStatus.FORBIDDEN
             );
         }
 

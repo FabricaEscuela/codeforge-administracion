@@ -6,6 +6,7 @@ import com.codefactory.dev_social_network.Mensajeria.entity.ConversationEntity;
 import com.codefactory.dev_social_network.Mensajeria.entity.MessageEntity;
 import com.codefactory.dev_social_network.Mensajeria.interfaces.SendLegacyMessageUseCase;
 import com.codefactory.dev_social_network.Mensajeria.repository.MessageRepository;
+import com.codefactory.dev_social_network.bloqueos.interfaces.BloqueoInteraccionPort;
 import com.codefactory.dev_social_network.shared.exception.BusinessException;
 import com.codefactory.dev_social_network.usuarios.dto.UserSummary;
 import com.codefactory.dev_social_network.usuarios.interfaces.UserFinderByEmailPort;
@@ -21,13 +22,16 @@ public class SendLegacyMessageService implements SendLegacyMessageUseCase {
     private final UserFinderByEmailPort userFinder;
     private final ConversationResolver conversationResolver;
     private final MessageRepository messageRepository;
+    private final BloqueoInteraccionPort bloqueoPolicy;
 
     public SendLegacyMessageService(UserFinderByEmailPort userFinder,
                                     ConversationResolver conversationResolver,
-                                    MessageRepository messageRepository) {
+                                    MessageRepository messageRepository,
+                                    BloqueoInteraccionPort bloqueoPolicy) {
         this.userFinder = userFinder;
         this.conversationResolver = conversationResolver;
         this.messageRepository = messageRepository;
+        this.bloqueoPolicy = bloqueoPolicy;
     }
 
     @Override
@@ -39,6 +43,11 @@ public class SendLegacyMessageService implements SendLegacyMessageUseCase {
         if (senderId.equals(receiver.id())) {
             throw new BusinessException(
                     "SELF_MESSAGE", "No puedes enviarte un mensaje a ti mismo", HttpStatus.BAD_REQUEST);
+        }
+
+        if (bloqueoPolicy.estaBloqueada(senderId, receiver.id())) {
+            throw new BusinessException(
+                    "ENVIO_BLOQUEADO", "No es posible enviar mensajes a este usuario", HttpStatus.FORBIDDEN);
         }
 
         ConversationEntity conversation = conversationResolver.resolve(senderId, receiver.id());
